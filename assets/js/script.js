@@ -206,3 +206,19 @@ $(".card .list-group").sortable({
     saveTasks();
   },
 });
+
+//Draggable droppable Trash option for LI items to Trash bin on bottom of screen:
+$("#trash").droppable({
+  accept: ".card .list-group-item",
+  tolerance: "touch",
+  drop: function (evet, ui) {
+    ui.draggable.remove();
+    console.log("drop");
+  },
+  over: function (event, ui) {
+    console.log("over");
+  },
+  out: function (event, ui) {
+    console.log("out");
+  },
+});
