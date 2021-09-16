@@ -13,6 +13,11 @@ var createTask = function (taskText, taskDate, taskList) {
 
   // append to ul list on the page
   $("#list-" + taskList).append(taskLi);
+
+  //jQuery date picker:
+  $("#modalDueDate").datepicker({
+    minDate: 1,
+  });
 };
 
 var loadTasks = function () {
@@ -75,16 +80,45 @@ $("#task-form-modal .btn-primary").click(function () {
   }
 });
 
-//NEw Code for 5.1.6
+//List group:
 $(".list-group").on("click", "p", function () {
+  //get current text:
   var text = $(this).text().trim();
+
+  //Create new input element:
   var textInput = $("<textarea>").addClass("form-control").val(text);
   $(this).replaceWith(textInput);
   textInput.trigger("focus");
 });
 
-//5.1.6 - Blur callback:
-$(".list-group").on("blur", "textarea", function () {
+//Adding jQuery Date Picker to editable notes:
+$(".list-group").on("click", "span", function () {
+  // get current text
+  var date = $(this).text().trim();
+
+  // create new input element
+  var dateInput = $("<input>")
+    .attr("type", "text")
+    .addClass("form-control")
+    .val(date);
+
+  $(this).replaceWith(dateInput);
+
+  // enable jquery ui datepicker
+  dateInput.datepicker({
+    minDate: 1,
+    onClose: function () {
+      //When the calender is closed, force a change even on the 'dateInput'
+      $(this).trigger("change");
+    },
+  });
+
+  // automatically bring up the calendar
+  dateInput.trigger("focus");
+});
+
+//Changed "Blur" to "change" callback when the date picker was added:
+$(".list-group").on("change", "textarea", function () {
   //Get the text area's current value:
   var text = $(this).val().trim();
 
@@ -105,7 +139,7 @@ $(".list-group").on("blur", "textarea", function () {
   $(this).replaceWith(taskP);
 });
 
-//5.1.7 = Due Date editing:
+//Due Date editing:
 //due date was clicked:
 $(".list-group").on("click", "span", function () {
   //Get the current text:
@@ -126,7 +160,7 @@ $(".list-group").on("click", "span", function () {
 
 //Blur event to convert everything back when user clicks outside of input fields:
 //Value of due date was changed:
-$(".list-group").on("blur", "input[type= 'text']", function () {
+$(".list-group").on("change", "input[type='text']", function () {
   // Get current text"
   var date = $(this).val().trim();
 
@@ -222,3 +256,5 @@ $("#trash").droppable({
     console.log("out");
   },
 });
+
+//Did not add Moment.js due to obsolescence with program. Will add JS timer in the 2.0 build.
